@@ -24,9 +24,14 @@ data "aws_ami" "amazon_linux_2" {
   owners = ["amazon"]
 }
 
+locals {
+  private_key = "${path.cwd}/${var.ssh_private_key_file}"
+  public_key  = "${path.cwd}/${var.ssh_public_key_file}"
+}
+
 resource "aws_key_pair" "openvpn" {
   key_name   = var.ssh_private_key_file
-  public_key = file("${path.module}/${var.ssh_public_key_file}")
+  public_key = file(local.public_key)
 }
 
 resource "aws_instance" "openvpn" {
@@ -59,7 +64,7 @@ resource "null_resource" "openvpn_bootstrap" {
     host        = aws_instance.openvpn.public_ip
     user        = var.ec2_username
     port        = "22"
-    private_key = file("${path.module}/${var.ssh_private_key_file}")
+    private_key = file(local.private_key)
     agent       = false
   }
 
@@ -75,7 +80,7 @@ resource "null_resource" "openvpn_bootstrap" {
            ./openvpn-install.sh
       
 EOT
-      ,
+    ,
     ]
   }
 }
@@ -92,7 +97,7 @@ resource "null_resource" "openvpn_update_users_script" {
     host        = aws_instance.openvpn.public_ip
     user        = var.ec2_username
     port        = "22"
-    private_key = file("${path.module}/${var.ssh_private_key_file}")
+    private_key = file(local.private_key)
     agent       = false
   }
 
