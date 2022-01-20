@@ -25,8 +25,8 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 locals {
-  private_key = "${path.cwd}/${var.ssh_private_key_file}"
-  public_key  = "${path.cwd}/${var.ssh_public_key_file}"
+  private_key = var.ssh_private_key_file
+  public_key  = var.ssh_public_key_file
 }
 
 resource "aws_key_pair" "openvpn" {

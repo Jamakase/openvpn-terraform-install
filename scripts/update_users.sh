@@ -64,7 +64,7 @@ do
 
     # Export the corresponding options and revoke the user certificate
     export MENU_OPTION="2"
-    export CLIENT="${ovpn_user}"
+    export CLIENTNUMBER="1"
     ./openvpn-install.sh
   fi
 done
